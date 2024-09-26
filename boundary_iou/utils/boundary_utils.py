@@ -103,7 +103,7 @@ def add_boundary_multi_core(coco, cpu_num=16, dilation_ratio=0.02):
     print('`boundary` added! (t={:0.2f}s)'.format(time.time()- tic))
 
 
-def coco_add_boundaries_and_save_as_annotation_file(annotation_file: str):
+def coco_add_boundaries_and_save_as_annotation_file(annotation_file: str, stem_addon='_b'):
     # NOTE: we only need coco at the moment, feel free to generalize this function
     from ..coco_instance_api.coco import COCO
 
@@ -115,13 +115,13 @@ def coco_add_boundaries_and_save_as_annotation_file(annotation_file: str):
         coco_json = json.load(f)
 
     # boundary counts are byte strings, we need to decode them so they are json serializable
-    anns_wb = list(coco.anns.values())
-    for a in anns_wb:
+    anns_b = list(coco.anns.values())
+    for a in anns_b:
         a['boundary']['counts'] = a['boundary']['counts'].decode("utf-8")
-    coco_json['annotations'] = anns_wb
+    coco_json['annotations'] = anns_b
 
-    new_annotation_file = annotation_file.parent / (annotation_file.stem + "_wb.json")
+    new_annotation_file = annotation_file.parent / (annotation_file.stem + stem_addon + annotation_file.suffix)
     with open(new_annotation_file, 'w', encoding='utf-8') as f:
         json.dump(coco_json, f)
 
-    print(f"\nAdded boundaries to '{annotation_file.name}' and saved as: '{new_annotation_file.name}'")
+    print(f"\nAdded boundaries to ({annotation_file.parent}) '{annotation_file.name}' and saved as: '{new_annotation_file.name}'")
