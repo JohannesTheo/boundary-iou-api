@@ -203,7 +203,7 @@ class COCOeval:
             raise Exception('unknown iouType for iou computation')
 
         # compute iou between each dt and gt region
-        iscrowd = [int(o['iscrowd']) for o in gt]
+        iscrowd = [int(o.get('iscrowd', 0)) for o in gt]
         ious = maskUtils.iou(d,g,iscrowd)
         return ious
     
@@ -231,7 +231,7 @@ class COCOeval:
         d_b = [d['boundary'] for d in dt]
 
         # compute iou between each dt and gt region
-        iscrowd = [int(o['iscrowd']) for o in gt]
+        iscrowd = [int(o.get('iscrowd', 0)) for o in gt]
         mask_ious = maskUtils.iou(d_m,g_m,iscrowd)
         boundary_ious = maskUtils.iou(d_b,g_b,iscrowd)
         # combine mask and boundary iou
