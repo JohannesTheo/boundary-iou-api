@@ -314,7 +314,7 @@ class COCOeval:
         gt = [gt[i] for i in gtind]
         dtind = np.argsort([-d['score'] for d in dt], kind='mergesort')
         dt = [dt[i] for i in dtind[0:maxDet]]
-        iscrowd = [int(o['iscrowd']) for o in gt]
+        iscrowd = [int(o.get('iscrowd', 0)) for o in gt]
         # load computed ious
         ious = self.ious[imgId, catId][:, gtind] if len(self.ious[imgId, catId]) > 0 else self.ious[imgId, catId]
 
